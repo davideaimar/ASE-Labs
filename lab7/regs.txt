@@ -1,0 +1,13 @@
+12 -> num of requests
+11 -> num of sector
+10 -> total amount
+9  -> tot qty of bought tickets
+0  -> pointer to next ticket request
+1  -> sector id required
+2  -> qty required
+3  -> required ticket price
+4  -> required ticket qty
+5  -> pointer to qty to be updated
+
+tot amount = 73F
+tot qty    = 84

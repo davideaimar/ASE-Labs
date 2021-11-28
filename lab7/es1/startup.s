@@ -46,6 +46,10 @@ __heap_base
 Heap_Mem        SPACE   Heap_Size
 __heap_limit
 
+				AREA	readmem, DATA, READWRITE
+Sector_quantity SPACE 48
+Total_tickets	SPACE 4
+
 
                 PRESERVE8
                 THUMB
@@ -127,18 +131,35 @@ Reset_Handler   PROC
 					
 n_req			RN 		12
 n_sec			RN		11
+tot_amount		RN		10
+tot_qty			RN		9
+				
+				mov 	r0, #6
+				LDR 	r1, =Sector_quantity_read
+				LDR 	r2, =Sector_quantity
+copy_qty		
+				LDR r3, [r1], #4
+				LDR r4, [r1], #4
+				STR r3, [r2], #4
+				STR r4, [r2], #4
+				
+				subs 	r0, r0, #1
+				bne copy_qty
+				
 				
 				LDR		n_req, =Ticket_requests
 				LDR		n_sec, =Num_sectors
 				
 				LDR 	n_req, [n_req]
 				LDR 	n_sec, [n_sec]
-				mov 	r0, #0	; r0 = total amount
+				
+				mov 	tot_amount, #0	; r10 = total amount
+				mov 	tot_qty, #0	; r9 = total number of bought tickets
+				LDR 	r0, =Tickets
 Loop				
-				LDR 	r3, =Tickets
 			
-				LDR		r1, [r3], #4 ; sector id required
-				LDR		r2, [r3], #4 ; qty required
+				LDR		r1, [r0], #4 ; sector id required
+				LDR		r2, [r0], #4 ; qty required
 				
 				; calculate address of requested sector price
 				; 1 -->  0 + 4 =  4
@@ -147,27 +168,26 @@ Loop
 				; 4 --> 24 + 4 = 28
 				; 5 --> 32 + 4 = 36
 				; 6 --> 40 + 4 = 44
-				cmp	 	r1, #0
-				subne 	r1, r1, #1
-				lslne 	r3, r1, #3
-				LDR		r10, =Sector_prices
-				addne 	r3, r3, r10
-				moveq 	r3, r10
-				add 	r3, r3, #4
-				LDR 	r3, [r3] ; r3 = price for requested ticket
+				sub 	r3, r1, #1
+				lsl 	r3, r3, #3
+				add		r3, r3, #4
+				LDR		r4, =Sector_prices
+				add 	r4, r3, r4
+				LDR 	r3, [r4] ; r3 = price for requested ticket
+				
 				
 				; loop quantities array and find the requested id (in r2)
-				mov 	r6, n_sec
+				mov 	r4, n_sec
 				LDR		r5, =Sector_quantity
 find_qty		
-				LDR		r7, [r5], #4 ; id
-				LDR		r8, [r5], #4 ; qty
+				LDR		r6, [r5], #4 ; id
+				LDR		r7, [r5], #4 ; qty
 				
-				cmp 	r7, r1 ; check id id is the one requested
-				moveq 	r4, r8
+				cmp 	r6, r1 ; check id id is the one requested
+				moveq 	r4, r7
 				beq 	found_qty
 				
-				subs 	r6, r6, #1
+				subs 	r4, r4, #1
 				bne 	find_qty
 				
 found_qty		; qty in r4
@@ -176,18 +196,29 @@ found_qty		; qty in r4
 				cmp 	r4, r2
 				bge 	qty_ok
 				mov 	r11, #0x01
-				mov 	r0, #0
-				ldr 	r1, =total_tickets
-				str 	r0, [r1]
+				mov 	r10, #0
+				ldr 	r1, =Total_tickets
+				str 	r10, [r1]
 				b 		stop
 
 qty_ok			
 				sub 	r4, r4, r2 ; r4 = new qty
-				STR		r4, [r5] ; put qty in a writable mem
+				STR		r4, [r5] ; save new qty
+				
+				add tot_qty, tot_qty, r2
+				mul r6, r3, r2
+				add tot_amount, tot_amount, r6
 				
 				
-				adds 	n_req, n_req, #-1
+				subs 	n_req, n_req, #1
 				bne 	Loop
+				
+				; save total amount 
+				cmp tot_qty, #10
+				asrge tot_amount, tot_amount, #1
+				
+				ldr 	r1, =Total_tickets
+				STR		tot_amount, [r1]
 				
 				b 		stop
 				
@@ -196,17 +227,14 @@ stop			b 		stop
 Sector_prices 	DCD 0x01, 25, 0x02, 40, 0x03, 55, 0x04, 65, 0x05, 80
 				DCD 0x06, 110	
 
-Sector_quantity DCD 0x02, 250, 0x05, 250, 0x03, 550, 0x01, 150, 0x04
+Sector_quantity_read DCD 0x02, 250, 0x05, 250, 0x03, 550, 0x01, 150, 0x04
 				DCD 100, 0x06, 200
 					
 Num_sectors 	DCB 6
-
+				ALIGN
 Tickets 		DCD 0x05, 2, 0x03, 10, 0x01, 120
 	
 Ticket_requests DCD 3
-
-total_tickets	SPACE 4
-
 
                 ENDP
 
