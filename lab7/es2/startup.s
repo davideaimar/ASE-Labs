@@ -31,7 +31,8 @@
 Stack_Size      EQU     0x00000200
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
-Stack_Mem       SPACE   Stack_Size
+				SPACE	Stack_Size/2
+Stack_Process   SPACE   Stack_Size/2
 __initial_sp
 
 
@@ -123,34 +124,15 @@ CRP_Key         DCD     0xFFFFFFFF
 ; Reset Handler
 
 Reset_Handler   PROC
-                EXPORT  Reset_Handler             [WEAK]                                            
-                LDR     R0, =Reset_Handler
-
-				mov r2, #0x1234
-				mov r3, #0x1234
+                EXPORT  Reset_Handler             [WEAK]
 				
-				;Traditional solution
-;				cmp r2, r3
-;				
-;				blt Negative
-;				beq Equals
-;Positive		;r2>r3
-;				mov r4, r3
-;				b Finish
-;Negative		;r2<r3
-;				mov r4, r2
-;				b Finish
-;Equals			asr r3, r3, #1
-;				add r5, r3, r2
-
-;				;ARM solution
-				cmp r2, r3
-				addeq r5, r2, r3, ASR #1
-				movlt r4, r2
-				movgt r4, r3
+				mov 	r0,#0x11 ; r0 = 17
+				MSR		CONTROL, R0
+				LDR		SP, =Stack_Process
 				
+				SVC		#0x1
 				
-Finish			BX R0
+Stop			b .
                 ENDP
 
 
@@ -182,7 +164,16 @@ UsageFault_Handler\
                 ENDP
 SVC_Handler     PROC
                 EXPORT  SVC_Handler               [WEAK]
-                B       .
+                
+				STMFD 	SP!, {R0-R12, LR} 
+				MRS R1, PSP
+				LDR 	R0, [R1, #24]
+				LDR 	R0, [R0,#-4]
+				BIC 	R0, #0xFF000000
+				LSR 	R0, #16
+				LDMFD 	SP!, {R0-R12, LR}
+				BX 		LR
+				
                 ENDP
 DebugMon_Handler\
                 PROC
