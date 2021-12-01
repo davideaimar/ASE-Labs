@@ -117,6 +117,8 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
 CRP_Key         DCD     0xFFFFFFFF
                 ENDIF
 
+				AREA	results, DATA, READWRITE
+SQResult		SPACE 	4
 
                 AREA    |.text|, CODE, READONLY
 
@@ -126,18 +128,79 @@ CRP_Key         DCD     0xFFFFFFFF
 Reset_Handler   PROC
                 EXPORT  Reset_Handler             [WEAK]
 				
-				mov 	r0,#0x11 ; r0 = 17
-				MSR		CONTROL, R0
+				mov 	r0, #0x11 ; r0 = 17
+				mov 	r1, #3
+				MSR		CONTROL, r1
 				LDR		SP, =Stack_Process
 				
-				SVC		#0x1
+				SVC		#0x2
+				
+				LDR		R0, [sp]
+				LDR		R1, =SQResult
+				STR		R0, [R1]
 				
 Stop			b .
                 ENDP
 
 
-; Dummy Exception Handlers (infinite loops which can be modified)
 
+SVC_Handler     PROC
+                EXPORT  SVC_Handler               [WEAK]
+					
+				; CHIAMANTE IN UNPRIVILEGED MODE CON PSP
+				STMFD 	SP!, {R0-R12, LR} 
+				MRS 	R2, PSP
+				LDR 	R0, [R2, #24] 	; indirizzo istruzione che chiama SVC
+				LDR 	R0, [R0,#-4]  	; R0 = istruzione SVC chiamante
+				BIC 	R0, #0xFF000000
+				LSR 	R0, #16			; Commento dell'SVC (0 o 1)
+				MOV		R1, R0			; R1 = direttiva
+				LDR 	R0, [R2]		; R0 = X
+				
+				
+				; CHIAMANTE IN PRIVILEGED MODE CON MSP
+;				STMFD 	SP!, {R0-R12, LR} 
+;				LDR		R3, [SP, #80] 
+;				LDR		R1, [R3, #-4] 
+;				BIC		R1, #0xFF000000
+;				LSR		R1, #16		  
+				
+				cmp 	r1, #0
+				beq 	Square_power
+				cmp 	r1, #1
+				beq		Square_root
+				mov 	r2, r0
+				b 		Svc_end
+Square_power	; 		r2 = X
+				mul 	r2, r0, r0
+				b 		Svc_end
+Square_root	
+				mov		r3, #1
+Square_root_loop
+				mul		r4, r3, r3
+				
+				cmp 	r4, r0
+				bgt		Square_root_found
+				add		r3, r3, #1
+				b Square_root_loop
+Square_root_found
+				sub		r2, r3, #1
+				b Svc_end
+				
+				
+Svc_end			
+				; CHIAMANTE IN UNPRIVILEGED MODE CON PSP
+				MRS 	R0, PSP 
+				STR		R2, [R0, #32]
+				
+				; CHIAMANTE IN PRIVILEGED MODE CON MSP
+				; STR		R2, [SP, #88]
+				
+				LDMFD 	SP!, {R0-R12, LR}
+Svc_quit		BX 		LR
+				ENDP
+					
+; Dummy Exception Handlers (infinite loops which can be modified)	
 NMI_Handler     PROC
                 EXPORT  NMI_Handler               [WEAK]
                 B       .
@@ -161,19 +224,6 @@ UsageFault_Handler\
                 PROC
                 EXPORT  UsageFault_Handler        [WEAK]
                 B       .
-                ENDP
-SVC_Handler     PROC
-                EXPORT  SVC_Handler               [WEAK]
-                
-				STMFD 	SP!, {R0-R12, LR} 
-				MRS R1, PSP
-				LDR 	R0, [R1, #24]
-				LDR 	R0, [R0,#-4]
-				BIC 	R0, #0xFF000000
-				LSR 	R0, #16
-				LDMFD 	SP!, {R0-R12, LR}
-				BX 		LR
-				
                 ENDP
 DebugMon_Handler\
                 PROC

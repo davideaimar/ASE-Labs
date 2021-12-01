@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\ASM_template.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\ASM_template.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Mon Nov 29 18:43:21 2021
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Dec 01 17:24:34 2021
 <BR><P>
 <H3>Maximum Stack Usage =          0 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -75,8 +75,11 @@ Function Pointers
 <H3>
 Global Symbols
 </H3>
-<P><STRONG><a name="[2d]"></a>Reset_Handler</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, startup.o(.text))
+<P><STRONG><a name="[2d]"></a>Reset_Handler</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, startup.o(.text))
 
+<P><STRONG><a name="[6]"></a>SVC_Handler</STRONG> (Thumb, 80 bytes, Stack size 0 bytes, startup.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
+</UL>
 <P><STRONG><a name="[1]"></a>NMI_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, startup.o(.text))
 <BR><BR>[Calls]<UL><LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NMI_Handler
 </UL>
@@ -110,9 +113,6 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UsageFault_Handler
 </UL>
-<BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
-</UL>
-<P><STRONG><a name="[6]"></a>SVC_Handler</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, startup.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
 <P><STRONG><a name="[7]"></a>DebugMon_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, startup.o(.text))
