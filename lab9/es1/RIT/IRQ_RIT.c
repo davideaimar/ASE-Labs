@@ -107,13 +107,13 @@ void RIT_IRQHandler (void)
 		}
 	}
 	
-  LPC_RIT->RICTRL |= 0x1;	/* clear interrupt flag */
 	
 			
 	if (in_rit_0==false && in_rit_1==false && in_rit_2==false){
 		disable_RIT();
 		reset_RIT();
 	}
+  LPC_RIT->RICTRL |= 0x1;	/* clear interrupt flag */
 	
   return;
 }

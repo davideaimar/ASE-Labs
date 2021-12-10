@@ -67,7 +67,7 @@ void disable_timer( uint8_t timer_num )
 **
 ** Descriptions:		Reset timer
 **
-** parameters:			timer number: 0 or 1
+** parameters:			timer number: 0 or 1 or 2
 ** Returned value:		None
 **
 ******************************************************************************/
@@ -78,7 +78,7 @@ void reset_timer( uint8_t timer_num )
   if ( timer_num == 0 )
   {
 		regVal = LPC_TIM0->TCR;
-		regVal |= 0x02;
+		regVal |= 0x2;
 		LPC_TIM0->TCR = regVal;
   }
   else if ( timer_num == 1 )
@@ -89,7 +89,7 @@ void reset_timer( uint8_t timer_num )
   }
 	else if ( timer_num == 2 ){
 		regVal = LPC_TIM2->TCR;
-		regVal |= 0x02;
+		regVal |= 0x2;
 		LPC_TIM2->TCR = regVal;
 	}
   return;
@@ -176,7 +176,7 @@ uint32_t init_timer ( uint8_t timer_num, uint32_t TimerInterval0, uint32_t Timer
 		LPC_TIM2->MCR = 61; /* Event on MR0/1 and reset on MR0 */				
 
 		NVIC_EnableIRQ(TIMER2_IRQn);
-		NVIC_SetPriority(TIMER2_IRQn, 0);
+		NVIC_SetPriority(TIMER2_IRQn, 1);
 		return (1);
   }
   return (0);

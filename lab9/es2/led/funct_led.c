@@ -112,6 +112,6 @@ void LED_On_Lum(unsigned int num, unsigned int lum) {
 		init_timer(2, t_on, t_on+t_off);
 		enable_timer(2);
 	}
-  LPC_GPIO2->FIOPIN |= led_mask[num];
-	led_value = LPC_GPIO2->FIOPIN;
+  // LPC_GPIO2->FIOPIN |= led_mask[num];
+	// led_value = LPC_GPIO2->FIOPIN;
 }
