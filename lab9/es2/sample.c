@@ -35,10 +35,10 @@ int main (void) {
   BUTTON_init();												/* BUTTON Initialization              */
 	
 	LED_On(4);
-	//LED_On_Lum(1, 100);
+	//LED_On_Lum(2, 100);
 	//LED_On_Lum(2, 75);
-	LED_On_Lum(3, 50);
-	//LED_On_Lum(4, 25);
+	LED_On_Lum(2, 50);
+	//LED_On_Lum(2, 25);
 	
 	LPC_SC->PCON |= 0x1;									/* power-down	mode										*/
 	LPC_SC->PCON &= 0xFFFFFFFFD;						
