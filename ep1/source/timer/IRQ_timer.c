@@ -24,46 +24,47 @@
 **
 ******************************************************************************/
 
-extern uint16_t ball_x;
-extern uint16_t ball_y;
+extern float ball_x;
+extern float ball_y;
 extern uint16_t paddle_x;
 extern uint16_t paddle_y;
 extern double dir_angle;
+extern float sin_dir_angle;
+extern float cos_dir_angle;
 
-void calc_next_coord(uint16_t* x, uint16_t* y){
-	
-}
-
-int is_good_border(){
-	return ((ball_y<=10) || (ball_x<=10&&ball_y<=320-47) || (ball_x>=230&&ball_y<=320-47));
-}
-int hit_paddle(){
-	uint16_t bottom_y = ball_y+BALL_SIZE;
-	return ( (dir_angle>PI/2  && dir_angle<(PI+PI/2)) && (bottom_y>=paddle_y&&bottom_y<paddle_y+10) && (ball_x >= paddle_x && ball_x <= paddle_x + PADDLE_WIDTH) ) ;
-}
 
 void detect_bounce(){
-	if (is_good_border()){
-		dir_angle += 2*PI;
+	if ( IS_GOOD_BORDER_LEFT || IS_GOOD_BORDER_RIGHT ){
+		dir_angle = fmod(2*PI-dir_angle + 2*PI, 2*PI);
+		sin_dir_angle = sin(dir_angle);
+		cos_dir_angle = cos(dir_angle);
 	}
-	if (hit_paddle()){
-		dir_angle += 2*PI;
+	else if ( IS_BORDER_TOP && GOING_UP ){
+		dir_angle = fmod(PI - dir_angle + 2*PI, 2*PI);
+		sin_dir_angle = sin(dir_angle);
+		cos_dir_angle = cos(dir_angle);
 	}
-		
+	else if ( IS_HITTING_PADDLE ){
+		int rel_x = floor(ball_x)-paddle_x; // ball x position relative to paddle
+		rel_x = rel_x < 5 ? 5 : rel_x;
+		rel_x = rel_x >=80 ? 75 : rel_x;
+		// 0...PADDLE_WIDTH+BALL_SIZE -> 3/2PI--PI/2
+		dir_angle = fmod((((rel_x) * PI) / (PADDLE_WIDTH)) + 3*PI/2 + 2*PI, 2*PI);
+		sin_dir_angle = sin(dir_angle);
+		cos_dir_angle = cos(dir_angle);
+	}
 }
 
 void TIMER0_IRQHandler (void)
 {
-	//calc_next_coord(&x, &y);
-	detect_bounce();
 	/* GUI refresh */
+	detect_bounce();
 	// clear old ball
-	LCD_DrawRect(ball_x, ball_y, 5, 5, Black);
-	// TODO: calculate next x, y
-	ball_x += (int)      sin(dir_angle)*SPEED;
-	ball_y += (int) -1 * cos(dir_angle)*SPEED;
+	LCD_DrawRect( floor(ball_x),floor(ball_y), BALL_SIZE, BALL_SIZE, Black);
+	ball_x +=      sin_dir_angle*SPEED;
+	ball_y -= 		 cos_dir_angle*SPEED;
 	// draw new ball
-	LCD_DrawRect(ball_x, ball_y, 5, 5, Green);
+	LCD_DrawRect( floor(ball_x),floor(ball_y), BALL_SIZE, BALL_SIZE, Green);
 	
   LPC_TIM0->IR = 1;			/* clear interrupt flag */
   return;

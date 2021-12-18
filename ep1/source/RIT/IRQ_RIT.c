@@ -66,6 +66,13 @@ void RIT_IRQHandler (void)
 					init_timer(0, 0x002625A ); 	
 					#endif					   
 					enable_timer(0);
+					// enable timer1 -> it implements potentiometer readings
+					#ifdef SIMULATOR
+					init_timer(1, 0x001E848);
+					#else
+					init_timer(1, 0x002625A);							 
+					#endif
+					enable_timer(1);
 					break;
 				default:
 					break;
@@ -87,6 +94,11 @@ void RIT_IRQHandler (void)
 						enable_timer(0);
 					else
 						disable_timer(0);
+					
+					if (LPC_TIM1->TCR == 0)
+						enable_timer(1);
+					else
+						disable_timer(1);
 					break;
 				default:
 					break;
