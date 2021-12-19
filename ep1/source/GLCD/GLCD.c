@@ -1420,14 +1420,14 @@ void GUI_Text(uint16_t Xpos, uint16_t Ypos, uint8_t *str,uint16_t Color, uint16_
 void LCD_DrawRect(uint16_t x0, uint16_t y0, uint8_t length, uint16_t height , uint16_t color)
 {
 		int i;
-		if (length>height){
+		if (length>=height){
 			for ( i=0; i < height; i++ ){
-				LCD_DrawLine(x0, y0+i, x0+length, y0+i, color); 
+				LCD_DrawLine(x0, y0+i, x0+length-1, y0+i, color); 
 			}
 		}
 		else{
 			for ( i=0; i < length; i++ ){
-				LCD_DrawLine(x0+i, y0, x0+i, y0+height, color); 
+				LCD_DrawLine(x0+i, y0, x0+i, y0+height-1, color); 
 			}
 		}
 }

@@ -11,6 +11,8 @@ volatile float ball_y = 320-47;
 volatile double dir_angle = PI/4; 
 volatile float sin_dir_angle;
 volatile float cos_dir_angle;
+volatile int points = 100;
+volatile int max_score = 100;
 
 void pong_init(){
 	
@@ -28,7 +30,9 @@ void pong_init(){
 	// ball
 	LCD_DrawRect( 117, 320-42-BALL_SIZE, BALL_SIZE, BALL_SIZE, Green);
 	
-	GUI_Text(0, 190, (uint8_t *) " press KEY1 to start the game ", White, Black);
+	GUI_Text(40, 190, (uint8_t *) " press KEY1 to play ", White, Black);
+	GUI_Text(10, 300, (uint8_t *) "Record:  100", White, Black);
+	GUI_Text(130, 300, (uint8_t *) "Score: ", White, Black);
 	
 	// enable RIT -> it implements button debouncing
 	#ifdef SIMULATOR
