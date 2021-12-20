@@ -60,11 +60,11 @@ void detect_bounce(){
 		cos_dir_angle = cos(dir_angle);
 		points = points >= 100 ? points+10 : points+5;
 		sprintf(str, "%d", points);
-		GUI_Text(200, 300, (uint8_t *) str, White, Black);
+		GUI_Text(80, 155, (uint8_t *) str, White, Black);
 		if (points > max_score){
 			max_score = points;
 			sprintf(str, "%d", max_score);
-			GUI_Text(83, 300, (uint8_t *) str, White, Black);
+			GUI_Text(153, 30, (uint8_t *) str, White, Black);
 		}
 	}
 }

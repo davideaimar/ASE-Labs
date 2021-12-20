@@ -6,12 +6,12 @@
 
 volatile uint16_t paddle_x = 100;
 volatile uint16_t paddle_y = 320-42;
-volatile float ball_x = 117;
-volatile float ball_y = 320-47;
-volatile double dir_angle = PI/4; 
+volatile float ball_x = MAX_X-15;
+volatile float ball_y = MAX_Y/2;
+volatile double dir_angle = 5*PI/4; 
 volatile float sin_dir_angle;
 volatile float cos_dir_angle;
-volatile int points = 100;
+volatile int points = 0;
 volatile int max_score = 100;
 
 void pong_init(){
@@ -22,17 +22,17 @@ void pong_init(){
 	LCD_Clear(Black);
 	
 	// bouncing walls
-	LCD_DrawRect( 0, 0, 240, 5, Red);
-	LCD_DrawRect( 0, 0, 5, 320-42, Red);
-	LCD_DrawRect( 235, 0, 5, 320-42, Red);
+	LCD_DrawRect( 0, 0, MAX_X, 5, Red); // top border
+	LCD_DrawRect( 0, 0, 5, MAX_Y-42, Red); // left border
+	LCD_DrawRect( MAX_X-5, 0, 5, MAX_Y-42, Red); // right border
 	
 	
 	// ball
-	LCD_DrawRect( 117, 320-42-BALL_SIZE, BALL_SIZE, BALL_SIZE, Green);
+	LCD_DrawRect( floor(ball_x), floor(ball_y), BALL_SIZE, BALL_SIZE, Green);
 	
-	GUI_Text(40, 190, (uint8_t *) " press KEY1 to play ", White, Black);
-	GUI_Text(10, 300, (uint8_t *) "Record:  100", White, Black);
-	GUI_Text(130, 300, (uint8_t *) "Score: ", White, Black);
+	GUI_Text(40, 300, (uint8_t *) " press KEY1 to play ", White, Black);
+	GUI_Text(130, 30, (uint8_t *) "Record:  100", White, Black);
+	GUI_Text(20, 155, (uint8_t *) "Score: ", White, Black);
 	
 	// enable RIT -> it implements button debouncing
 	#ifdef SIMULATOR
