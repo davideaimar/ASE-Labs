@@ -10,6 +10,7 @@
 
 #include "lpc17xx.h"
 #include "adc.h"
+#include <stdlib.h>
 #include "../led/led.h"
 #include "../timer/timer.h"
 #include "../GLCD/GLCD.h"
@@ -26,26 +27,18 @@ extern uint16_t paddle_x;
 extern uint16_t paddle_y;
 
 void ADC_IRQHandler(void) {
-	short new_slot;
+	short new_x;
+	
 	
   AD_current = ((LPC_ADC->ADGDR>>4) & 0xFFF);/* Read Conversion Result             */  
-	#ifdef SIMULATOR
-	new_slot = AD_current*((240-PADDLE_WIDTH)/10) / 0xFFF;
-	#else
-	new_slot = AD_current*((240-PADDLE_WIDTH)) / 0xFFF;
-	#endif
+	new_x = (short) AD_current*((240-PADDLE_WIDTH)) / 0xFFF;
 	
-	if(new_slot != current_slot){
+	if( abs( new_x - paddle_x) > 5){
 		// remove old paddle
 		LCD_DrawRect( paddle_x, paddle_y, PADDLE_WIDTH, PADDLE_HEIGHT, Black);
 		// draw new paddle
-		#ifdef SIMULATOR
-		paddle_x = new_slot*10;
-		#else
-		paddle_x = new_slot*5;
-		#endif
+		paddle_x = new_x;
 		LCD_DrawRect( paddle_x, paddle_y, PADDLE_WIDTH, PADDLE_HEIGHT, Green);
-		current_slot = new_slot;
 	}  
 	
 }

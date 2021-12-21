@@ -13,7 +13,6 @@
 #include "../adc/adc.h"
 #include "../pong/pong.h"
 #include <math.h>
-#include <stdio.h>
 
 /******************************************************************************
 ** Function name:		Timer0_IRQHandler
@@ -34,64 +33,53 @@ extern float sin_dir_angle;
 extern float cos_dir_angle;
 extern int points;
 extern int max_score;
+extern float spin_speed;
+extern void manage_loosing(void);
+extern void manage_bounce(void);
+extern float clamp(float d, int min, int max);
 
 uint16_t old_pixels[BALL_SIZE][BALL_SIZE] = {{Black}};
-
-
-void detect_bounce(){
-	if ( IS_GOOD_BORDER_LEFT || IS_GOOD_BORDER_RIGHT ){
-		dir_angle = fmod(2*PI-dir_angle + 2*PI, 2*PI);
-		sin_dir_angle = sin(dir_angle);
-		cos_dir_angle = cos(dir_angle);
-	}
-	else if ( IS_BORDER_TOP && GOING_UP ){
-		dir_angle = fmod(PI - dir_angle + 2*PI, 2*PI);
-		sin_dir_angle = sin(dir_angle);
-		cos_dir_angle = cos(dir_angle);
-	}
-	else if ( IS_HITTING_PADDLE ){
-		char str[5];
-		int rel_x = floor(ball_x)-paddle_x; // ball x position relative to paddle
-		rel_x = rel_x < 5 ? 5 : rel_x;
-		rel_x = rel_x >=80 ? 75 : rel_x;
-		// 0...PADDLE_WIDTH+BALL_SIZE -> 3/2PI--PI/2
-		dir_angle = fmod((((rel_x) * PI) / (PADDLE_WIDTH)) + 3*PI/2 + 2*PI, 2*PI);
-		sin_dir_angle = sin(dir_angle);
-		cos_dir_angle = cos(dir_angle);
-		points = points >= 100 ? points+10 : points+5;
-		sprintf(str, "%d", points);
-		GUI_Text(80, 155, (uint8_t *) str, White, Black);
-		if (points > max_score){
-			max_score = points;
-			sprintf(str, "%d", max_score);
-			GUI_Text(153, 30, (uint8_t *) str, White, Black);
-		}
-	}
-}
+uint16_t SinTable[45] = {
+    410, 467, 523, 576, 627, 673, 714, 749, 778,
+    799, 813, 819, 817, 807, 789, 764, 732, 694, 
+    650, 602, 550, 495, 438, 381, 324, 270, 217,
+    169, 125, 87 , 55 , 30 , 12 , 2  , 0  , 6  ,   
+    20 , 41 , 70 , 105, 146, 193, 243, 297, 353
+};
 
 void TIMER0_IRQHandler (void)
 {
 	int i, j;
 	/* GUI refresh */
-	detect_bounce();
-	// clear old ball
-	for ( i=0; i<BALL_SIZE; i++ ){
-		for ( j=0; j<BALL_SIZE; j++ ){
-			LCD_SetPoint(ball_x+j, ball_y+i, old_pixels[i][j]);
-		}
+	if ( IS_LOOSING ) {
+		manage_loosing();
 	}
-	
-	//LCD_DrawRect( floor(ball_x),floor(ball_y), BALL_SIZE, BALL_SIZE, Black);
-	ball_x +=      sin_dir_angle*SPEED;
-	ball_y -= 		 cos_dir_angle*SPEED;
-	
-	for ( i=0; i<BALL_SIZE; i++ ){
-		for ( j=0; j<BALL_SIZE; j++ ){
-			old_pixels[i][j] = LCD_GetPoint(floor(ball_x)+j, floor(ball_y)+i);
+	else{
+		manage_bounce();
+		// clear old ball restoring all pixels
+		for ( i=0; i<BALL_SIZE; i++ ){
+			for ( j=0; j<BALL_SIZE; j++ ){
+				LCD_SetPoint(floor(ball_x)+j, floor(ball_y)+i, old_pixels[i][j]);
+			}
 		}
+		
+		// calculate next floating coordinates
+		ball_x += sin_dir_angle*SPEED*spin_speed;
+		ball_y -= cos_dir_angle*SPEED*spin_speed;
+		
+		// check that they don't skip the walls (could happen with higher speed for speeding up the emulator)
+		ball_x = clamp(ball_x, BALL_SIZE, MAX_X-BALL_SIZE-WALL_SIZE);
+		ball_y = clamp(ball_y, BALL_SIZE, MAX_Y-BALL_SIZE);
+		
+		// save background pixels to restore later
+		for ( i=0; i<BALL_SIZE; i++ ){
+			for ( j=0; j<BALL_SIZE; j++ ){
+				old_pixels[i][j] = LCD_GetPoint(floor(ball_x)+j, floor(ball_y)+i);
+			}
+		}
+		// draw new ball
+		LCD_DrawRect( floor(ball_x),floor(ball_y), BALL_SIZE, BALL_SIZE, Green);
 	}
-	// draw new ball
-	LCD_DrawRect( floor(ball_x),floor(ball_y), BALL_SIZE, BALL_SIZE, Green);
 	
   LPC_TIM0->IR = 1;			/* clear interrupt flag */
   return;
@@ -114,6 +102,51 @@ void TIMER1_IRQHandler (void)
   return;
 }
 
+
+/******************************************************************************
+** Function name:		Timer2_IRQHandler
+**
+** Descriptions:		Timer/Counter 2 interrupt handler
+**
+** parameters:			None
+** Returned value:		None
+**
+******************************************************************************/
+short num_sin = 0;
+void TIMER2_IRQHandler (void)
+{
+	static int ticks=0;
+	/* DAC management */	
+	LPC_DAC->DACR = SinTable[ticks]<<6;
+	ticks++;
+	if(ticks==45) {
+		num_sin++;
+		ticks=0;
+		if (num_sin > N_SIN ){
+			num_sin = 0;
+			disable_timer(2);
+		}
+	}	
+  LPC_TIM2->IR = 1;			/* clear interrupt flag */
+  return;
+}
+
+
+/******************************************************************************
+** Function name:		Timer3_IRQHandler
+**
+** Descriptions:		Timer/Counter 3 interrupt handler
+**
+** parameters:			None
+** Returned value:		None
+**
+******************************************************************************/
+void TIMER3_IRQHandler (void)
+{
+	
+  LPC_TIM3->IR = 1;			/* clear interrupt flag */
+  return;
+}
 /******************************************************************************
 **                            End Of File
 ******************************************************************************/
