@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\sample.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\sample.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Dec 21 22:23:31 2021
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Dec 24 15:48:29 2021
 <BR><P>
 <H3>Maximum Stack Usage =        304 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -457,7 +457,7 @@ Global Symbols
 
 <P><STRONG><a name="[e8]"></a>__semihosting_library_function</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, indicate_semi.o(.text), UNUSED)
 
-<P><STRONG><a name="[4c]"></a>pong_init</STRONG> (Thumb, 316 bytes, Stack size 40 bytes, pong.o(.text))
+<P><STRONG><a name="[4c]"></a>pong_init</STRONG> (Thumb, 338 bytes, Stack size 40 bytes, pong.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232 + Unknown Stack Size
 <LI>Call Chain = pong_init &rArr; sin &rArr; __ieee754_rem_pio2 &rArr; __aeabi_d2iz
 </UL>
@@ -511,7 +511,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;manage_bounce
 </UL>
 
-<P><STRONG><a name="[68]"></a>manage_bounce</STRONG> (Thumb, 1058 bytes, Stack size 56 bytes, pong.o(.text))
+<P><STRONG><a name="[68]"></a>manage_bounce</STRONG> (Thumb, 1062 bytes, Stack size 56 bytes, pong.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 248 + Unknown Stack Size
 <LI>Call Chain = manage_bounce &rArr; sin &rArr; __ieee754_rem_pio2 &rArr; __aeabi_d2iz
 </UL>
@@ -626,12 +626,13 @@ Global Symbols
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;emit_tone
 </UL>
 
-<P><STRONG><a name="[2a]"></a>RIT_IRQHandler</STRONG> (Thumb, 386 bytes, Stack size 8 bytes, irq_rit.o(.text))
+<P><STRONG><a name="[2a]"></a>RIT_IRQHandler</STRONG> (Thumb, 378 bytes, Stack size 8 bytes, irq_rit.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 240 + Unknown Stack Size
 <LI>Call Chain = RIT_IRQHandler &rArr; pong_init &rArr; sin &rArr; __ieee754_rem_pio2 &rArr; __aeabi_d2iz
 </UL>
 <BR>[Calls]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__NVIC_EnableIRQ
 <LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;reset_timer
+<LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;reset_RIT
 <LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enable_timer
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disable_timer
 <LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Text
@@ -649,7 +650,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[5f]"></a>reset_RIT</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, lib_rit.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pong_init
+<BR><BR>[Called By]<UL><LI><a href="#[2a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RIT_IRQHandler
+<LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pong_init
 </UL>
 
 <P><STRONG><a name="[49]"></a>init_RIT</STRONG> (Thumb, 98 bytes, Stack size 0 bytes, lib_rit.o(.text))

@@ -40,6 +40,8 @@ void pong_init(){
 	
 	// ball
 	LCD_DrawRect( floor(ball_x), floor(ball_y), BALL_SIZE, BALL_SIZE, Green);
+	// paddle
+	LCD_DrawRect( paddle_x, paddle_y, PADDLE_WIDTH, PADDLE_HEIGHT, Green);
 	
 	GUI_Text(40, 300, (uint8_t *) " press KEY1 to play ", White, Black);
 	GUI_Text(130, 30, (uint8_t *) "Record:  ", White, Black);

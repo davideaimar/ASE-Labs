@@ -1,6 +1,5 @@
 
 #ifndef __PONG_H 
-
 #define __PONG_H
 
 #define PADDLE_WIDTH 80
@@ -26,8 +25,8 @@
 #ifdef SIMULATOR
 #define SPEED 10
 #define N_SIN 2
-#define LOW_TONE 900
-#define HIGH_TONE 400
+#define LOW_TONE 400
+#define HIGH_TONE 100
 #else
 #define SPEED 1
 #define N_SIN 15

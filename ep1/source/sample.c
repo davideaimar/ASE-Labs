@@ -31,7 +31,7 @@ int main (void) {
 	ADC_init();
 	
 	#ifdef SIMULATOR
-	init_RIT(0x004C4B40);									/* RIT Initialization 50 msec       	*/
+	init_RIT(0x04C4B40);									/* RIT Initialization 50 msec       	*/
 	init_timer(1, 0x1E848);								/* GUI refresh every 5ms     	*/
 	init_timer(0, 0x001E848 ); 	
 	#else

@@ -387,7 +387,9 @@
   Clock Variable definitions
  *----------------------------------------------------------------------------*/
 uint32_t SystemFrequency = IRC_OSC; /*!< System Clock Frequency (Core Clock)  */
-
+#ifdef SIMULATOR
+uint8_t ScaleFlag = 0;
+#endif
 
 /**
  * Initialize the system
