@@ -18,15 +18,17 @@
 #define GOING_RIGHT ( dir_angle > 0 && dir_angle < PI ) 
 #define GOING_LEFT ( dir_angle < 2*PI && dir_angle > PI )
 
-#define IS_LOOSING ( ball_y>=MAX_Y-32 )
+#define IS_LOOSING ( ball_y>MAX_Y-32-PADDLE_HEIGHT )
 #define IS_BOUNCING ( (GOING_LEFT && IS_GOOD_BORDER_LEFT) || (GOING_UP && IS_BORDER_TOP) || (GOING_RIGHT && IS_GOOD_BORDER_RIGHT) )
 #define IS_HITTING_PADDLE ( GOING_DOWN && ((ball_y+BALL_SIZE)>=paddle_y&&(ball_y+BALL_SIZE)<paddle_y+10) && ((ball_x+BALL_SIZE) >= paddle_x && ball_x <= paddle_x + PADDLE_WIDTH) ) 
 
+
+// EDIT HERE TO OPTIMIZE SPEED AND AUDIO FOR EMULATOR
 #ifdef SIMULATOR
-#define SPEED 10
-#define N_SIN 2
-#define LOW_TONE 400
-#define HIGH_TONE 100
+#define SPEED 4
+#define N_SIN 1
+#define LOW_TONE 500
+#define HIGH_TONE 400
 #else
 #define SPEED 1
 #define N_SIN 15

@@ -26,6 +26,8 @@
 
 extern float ball_x;
 extern float ball_y;
+extern uint16_t int_ball_x;
+extern uint16_t int_ball_y;
 extern uint16_t paddle_x;
 extern uint16_t paddle_y;
 extern double dir_angle;
@@ -37,6 +39,8 @@ extern float spin_speed;
 extern void manage_loosing(void);
 extern void manage_bounce(void);
 extern float clamp(float d, int min, int max);
+extern uint8_t num_sin;
+extern uint8_t ticks;
 
 uint16_t old_pixels[BALL_SIZE][BALL_SIZE] = {{Black}};
 uint16_t SinTable[45] = {
@@ -59,7 +63,7 @@ void TIMER0_IRQHandler (void)
 		// clear old ball restoring all pixels
 		for ( i=0; i<BALL_SIZE; i++ ){
 			for ( j=0; j<BALL_SIZE; j++ ){
-				LCD_SetPoint(floor(ball_x)+j, floor(ball_y)+i, old_pixels[i][j]);
+				LCD_SetPoint(int_ball_x+j, int_ball_y+i, old_pixels[i][j]);
 			}
 		}
 		
@@ -71,14 +75,18 @@ void TIMER0_IRQHandler (void)
 		ball_x = clamp(ball_x, BALL_SIZE, MAX_X-BALL_SIZE-WALL_SIZE);
 		ball_y = clamp(ball_y, BALL_SIZE, MAX_Y-BALL_SIZE);
 		
+		// cache approximation
+		int_ball_x = floor(ball_x);
+		int_ball_y = floor(ball_y);
+		
 		// save background pixels to restore later
 		for ( i=0; i<BALL_SIZE; i++ ){
 			for ( j=0; j<BALL_SIZE; j++ ){
-				old_pixels[i][j] = LCD_GetPoint(floor(ball_x)+j, floor(ball_y)+i);
+				old_pixels[i][j] = LCD_GetPoint(int_ball_x+j, int_ball_y+i);
 			}
 		}
 		// draw new ball
-		LCD_DrawRect( floor(ball_x),floor(ball_y), BALL_SIZE, BALL_SIZE, Green);
+		LCD_DrawRect( int_ball_x, int_ball_y, BALL_SIZE, BALL_SIZE, Green);
 	}
 	
   LPC_TIM0->IR = 1;			/* clear interrupt flag */
@@ -112,10 +120,10 @@ void TIMER1_IRQHandler (void)
 ** Returned value:		None
 **
 ******************************************************************************/
-short num_sin = 0;
+
 void TIMER2_IRQHandler (void)
 {
-	static int ticks=0;
+	
 	/* DAC management */	
 	LPC_DAC->DACR = SinTable[ticks]<<6;
 	ticks++;
@@ -127,6 +135,7 @@ void TIMER2_IRQHandler (void)
 			disable_timer(2);
 		}
 	}	
+	
   LPC_TIM2->IR = 1;			/* clear interrupt flag */
   return;
 }

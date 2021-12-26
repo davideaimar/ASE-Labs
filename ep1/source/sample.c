@@ -18,6 +18,11 @@
 #include "RIT/RIT.h"
 #include "GLCD/GLCD.h"
 
+#ifdef SIMULATOR
+extern uint8_t ScaleFlag; // <- ScaleFlag needs to visible in order for the emulator to find the symbol (can be placed also inside system_LPC17xx.h but since it is RO, it needs more work)
+#endif
+
+// IMPORTANT: in order to avoid keil bug, when you debug using scaling factors always keep the RIT window opened.
 
 /*----------------------------------------------------------------------------
   Main Program
@@ -30,16 +35,10 @@ int main (void) {
   BUTTON_init();												/* BUTTON Initialization */ 
 	ADC_init();
 	
-	#ifdef SIMULATOR
-	init_RIT(0x04C4B40);									/* RIT Initialization 50 msec       	*/
-	init_timer(1, 0x1E848);								/* GUI refresh every 5ms     	*/
-	init_timer(0, 0x001E848 ); 	
-	#else
 	init_RIT(0x004C4B40);									/* RIT Initialization 50 msec       	*/
-	init_timer(1, 0x65B9B);								/*  GUI refresh every 60fps */
-	init_timer(0, 0x002625A ); 	
-	#endif
-		
+	init_timer(1, 0x65B9B);								/*  Paddle refresh */
+	init_timer(0, 0x2625A); 							/*  GUI refresh  */
+	
 	// enable RIT: it implements button debouncing
 	enable_RIT();
 	
