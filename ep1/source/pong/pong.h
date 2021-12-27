@@ -27,8 +27,8 @@
 #ifdef SIMULATOR
 #define SPEED 4
 #define N_SIN 1
-#define LOW_TONE 500
-#define HIGH_TONE 400
+#define LOW_TONE 7000 // (use scaling on timer2)
+#define HIGH_TONE 5000 // (use scaling on timer2)
 #else
 #define SPEED 1
 #define N_SIN 15

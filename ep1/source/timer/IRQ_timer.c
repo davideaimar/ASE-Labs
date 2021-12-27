@@ -53,19 +53,15 @@ uint16_t SinTable[45] = {
 
 void TIMER0_IRQHandler (void)
 {
-	int i, j;
+	uint8_t i, j;
+	uint16_t old_ball_x = int_ball_x, old_ball_y = int_ball_y;
+	
 	/* GUI refresh */
 	if ( IS_LOOSING ) {
 		manage_loosing();
 	}
 	else{
 		manage_bounce();
-		// clear old ball restoring all pixels
-		for ( i=0; i<BALL_SIZE; i++ ){
-			for ( j=0; j<BALL_SIZE; j++ ){
-				LCD_SetPoint(int_ball_x+j, int_ball_y+i, old_pixels[i][j]);
-			}
-		}
 		
 		// calculate next floating coordinates
 		ball_x += sin_dir_angle*SPEED*spin_speed;
@@ -79,6 +75,13 @@ void TIMER0_IRQHandler (void)
 		int_ball_x = floor(ball_x);
 		int_ball_y = floor(ball_y);
 		
+		
+		// restore old pixels (clear ball)
+		for ( i=0; i<BALL_SIZE; i++ ){
+			for ( j=0; j<BALL_SIZE; j++ ){
+				LCD_SetPoint(old_ball_x+j, old_ball_y+i, old_pixels[i][j]);
+			}
+		}
 		// save background pixels to restore later
 		for ( i=0; i<BALL_SIZE; i++ ){
 			for ( j=0; j<BALL_SIZE; j++ ){

@@ -21,19 +21,28 @@
  *----------------------------------------------------------------------------*/
 
 unsigned short AD_current;   
-unsigned short current_slot = 0;     /* Last converted value               */
 
 extern uint16_t paddle_x;
 extern uint16_t paddle_y;
 
+uint8_t new_hits = 0;
+
 void ADC_IRQHandler(void) {
-	short new_x;
+	uint16_t new_x;
 	
 	
-  AD_current = ((LPC_ADC->ADGDR>>4) & 0xFFF);/* Read Conversion Result             */  
-	new_x = (short) AD_current*((240-PADDLE_WIDTH)) / 0xFFF;
+  AD_current = ((LPC_ADC->ADGDR>>4) & 0xFFF);
+	new_x = (uint16_t) AD_current*((240-PADDLE_WIDTH)) / 0xFFF;
 	
 	if( abs( new_x - paddle_x) > 5){
+		new_hits++;
+	}
+	else{
+		new_hits = 0;
+	}
+	
+	if (new_hits > 5){
+		new_hits=0;
 		// remove old paddle
 		LCD_DrawRect( paddle_x, paddle_y, PADDLE_WIDTH, PADDLE_HEIGHT, Black);
 		// draw new paddle
