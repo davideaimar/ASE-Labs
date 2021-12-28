@@ -2,7 +2,7 @@ Dependencies for Project 'sample', Target 'Target 1': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
 F (.\startup_LPC17xx.s)(0x61C09E96)(--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork -I.\RTE\_Target_1-IC:\Users\david\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\david\AppData\Local\Arm\Packs\Keil\LPC1700_DFP\2.7.0\Device\Include--pd "__UVISION_VERSION SETA 536" --pd "_RTE_ SETA 1" --pd "LPC175x_6x SETA 1" --pd "_RTE_ SETA 1"--list .\startup_lpc17xx.lst --xref -o .\startup_lpc17xx.o --depend .\startup_lpc17xx.d)
 F (.\pong\pong.h)(0x61C9A082)()
-F (.\pong\pong.c)(0x61C88F28)(-c --cpu Cortex-M3 -D__EVAL -g -O0 --apcs=interwork -I.\RTE\_Target_1-IC:\Users\david\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\david\AppData\Local\Arm\Packs\Keil\LPC1700_DFP\2.7.0\Device\Include-D__UVISION_VERSION="536" -D_RTE_ -DLPC175x_6x -D_RTE_ -DSIMULATOR-o .\pong.o --omf_browse .\pong.crf --depend .\pong.d)
+F (.\pong\pong.c)(0x61CB4F88)(-c --cpu Cortex-M3 -D__EVAL -g -O0 --apcs=interwork -I.\RTE\_Target_1-IC:\Users\david\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\david\AppData\Local\Arm\Packs\Keil\LPC1700_DFP\2.7.0\Device\Include-D__UVISION_VERSION="536" -D_RTE_ -DLPC175x_6x -D_RTE_ -DSIMULATOR-o .\pong.o --omf_browse .\pong.crf --depend .\pong.d)
 I (pong\pong.h)(0x61C9A082)
 I (pong\../timer/timer.h)(0x61C09E96)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602585EE)

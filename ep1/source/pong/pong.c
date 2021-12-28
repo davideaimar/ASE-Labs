@@ -48,10 +48,8 @@ void pong_init(){
 	// paddle
 	LCD_DrawRect( paddle_x, paddle_y, PADDLE_WIDTH, PADDLE_HEIGHT, Green);
 	
-	GUI_Text(130, 30, (uint8_t *) "Record:  ", White, Black);
 	sprintf(str, "%d", max_score);
-	GUI_Text(203, 30, (uint8_t *) str, White, Black);
-	GUI_Text(20, 155, (uint8_t *) "Score: ", White, Black);
+	GUI_Text(205, 5, (uint8_t *) str, White, Black);
 	GUI_Text(40, 300, (uint8_t *) " press KEY1 to play ", White, Black);
 	
 	// enable timer1 -> it implements potentiometer readings
@@ -128,6 +126,6 @@ void manage_bounce(){
 		cos_dir_angle = cos(dir_angle);
 		points = points >= 100 ? points+10 : points+5;
 		sprintf(str, "%d", points);
-		GUI_Text(80, 155, (uint8_t *) str, White, Black);
+		GUI_Text(5, 155, (uint8_t *) str, White, Black);
 	}
 }

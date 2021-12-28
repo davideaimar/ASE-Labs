@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\sample.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\sample.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Mon Dec 27 12:18:54 2021
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Dec 28 18:55:22 2021
 <BR><P>
 <H3>Maximum Stack Usage =        280 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -450,16 +450,16 @@ Global Symbols
 <LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cos
 </UL>
 
-<P><STRONG><a name="[4c]"></a>pong_init</STRONG> (Thumb, 300 bytes, Stack size 24 bytes, pong.o(.text))
+<P><STRONG><a name="[4c]"></a>pong_init</STRONG> (Thumb, 264 bytes, Stack size 24 bytes, pong.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 216 + Unknown Stack Size
 <LI>Call Chain = pong_init &rArr; sin &rArr; __ieee754_rem_pio2 &rArr; __aeabi_dsub
 </UL>
 <BR>[Calls]<UL><LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
-<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
+<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
 <LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enable_timer
 <LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DrawRect
 <LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Clear
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Text
+<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Text
 <LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sin
 <LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cos
 <LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
@@ -483,7 +483,7 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = manage_loosing &rArr; GUI_Text &rArr; PutChar &rArr; LCD_SetPoint &rArr; LCD_SetCursor
 </UL>
 <BR>[Calls]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disable_timer
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Text
+<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Text
 </UL>
 <BR>[Called By]<UL><LI><a href="#[e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER0_IRQHandler
 </UL>
@@ -510,7 +510,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;manage_bounce
 </UL>
 
-<P><STRONG><a name="[69]"></a>manage_bounce</STRONG> (Thumb, 988 bytes, Stack size 48 bytes, pong.o(.text))
+<P><STRONG><a name="[69]"></a>manage_bounce</STRONG> (Thumb, 964 bytes, Stack size 48 bytes, pong.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 240 + Unknown Stack Size
 <LI>Call Chain = manage_bounce &rArr; sin &rArr; __ieee754_rem_pio2 &rArr; __aeabi_dsub
 </UL>
@@ -519,8 +519,8 @@ Global Symbols
 <LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 <LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
-<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Text
+<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
+<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Text
 <LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;normalize_dir_angle
 <LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;emit_tone
 <LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;clamp
@@ -629,7 +629,7 @@ Global Symbols
 <LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;reset_timer
 <LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enable_timer
 <LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disable_timer
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Text
+<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Text
 <LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pong_init
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_lpc17xx.o(RESET)
@@ -717,10 +717,10 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GetASCIICode
 <LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetPoint
 </UL>
-<BR>[Called By]<UL><LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Text
+<BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Text
 </UL>
 
-<P><STRONG><a name="[59]"></a>GUI_Text</STRONG> (Thumb, 80 bytes, Stack size 32 bytes, glcd.o(.text))
+<P><STRONG><a name="[5a]"></a>GUI_Text</STRONG> (Thumb, 80 bytes, Stack size 32 bytes, glcd.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = GUI_Text &rArr; PutChar &rArr; LCD_SetPoint &rArr; LCD_SetCursor
 </UL>
 <BR>[Calls]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutChar
@@ -741,7 +741,7 @@ Global Symbols
 <LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pong_init
 </UL>
 
-<P><STRONG><a name="[5a]"></a>__2sprintf</STRONG> (Thumb, 34 bytes, Stack size 32 bytes, noretval__2sprintf.o(.text))
+<P><STRONG><a name="[59]"></a>__2sprintf</STRONG> (Thumb, 34 bytes, Stack size 32 bytes, noretval__2sprintf.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 120 + Unknown Stack Size
 <LI>Call Chain = __2sprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -791,11 +791,11 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__printf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
+<BR>[Called By]<UL><LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
 </UL>
 
 <P><STRONG><a name="[31]"></a>_sputc</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, _sputc.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
+<BR><BR>[Called By]<UL><LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> noretval__2sprintf.o(.text)
 </UL>
