@@ -110,7 +110,9 @@ void manage_bounce(){
 		emit_tone(HIGH_TONE);
 		// this removes horizontal bouncing by limiting the angle
 		rel_x = clamp(rel_x, 5, 75);
-		// map rel_x=5..40 -> spin=2..0 and rel_x=40...75 -> spin=0..2
+		// this adds a pseudo-random behavior that remove game loops
+		LPC_RIT->RICOUNTER % 2 == 0 ? rel_x++ : rel_x--;
+		// map rel_x=5..40 -> spin=2..1 and rel_x=40...75 -> spin=1..2
 		if (rel_x < 40)
 			spin_speed = 2 - ((float)rel_x-5)/35;
 		else if ( rel_x > 40 )

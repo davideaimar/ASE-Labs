@@ -82,14 +82,13 @@ void TIMER0_IRQHandler (void)
 				LCD_SetPoint(old_ball_x+j, old_ball_y+i, old_pixels[i][j]);
 			}
 		}
-		// save background pixels to restore later
+		// save background pixels to restore later & draw new ball
 		for ( i=0; i<BALL_SIZE; i++ ){
 			for ( j=0; j<BALL_SIZE; j++ ){
 				old_pixels[i][j] = LCD_GetPoint(int_ball_x+j, int_ball_y+i);
+				LCD_SetPoint(int_ball_x+j, int_ball_y+i, Green);
 			}
 		}
-		// draw new ball
-		LCD_DrawRect( int_ball_x, int_ball_y, BALL_SIZE, BALL_SIZE, Green);
 	}
 	
   LPC_TIM0->IR = 1;			/* clear interrupt flag */
