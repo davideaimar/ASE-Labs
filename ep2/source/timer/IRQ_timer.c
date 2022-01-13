@@ -71,7 +71,7 @@ void TIMER0_IRQHandler (void)
 			top_paddle_dir = !top_paddle_dir;
 		}
 		// if going left delete right pixels
-		LCD_DrawRect( old_top_paddle_x+PADDLE_WIDTH, player_top.paddle_y, old_top_paddle_x-player_top.paddle_x, PADDLE_HEIGHT, Black);
+		LCD_DrawRect( player_top.paddle_x+PADDLE_WIDTH, player_top.paddle_y, old_top_paddle_x-player_top.paddle_x, PADDLE_HEIGHT, Black);
 		// draw new piece of paddle on the left
 		LCD_DrawRect( player_top.paddle_x, player_top.paddle_y, TOP_PADDLE_SPEED, PADDLE_HEIGHT, Green);
 	}

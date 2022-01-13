@@ -1368,6 +1368,41 @@ void PutChar( uint16_t Xpos, uint16_t Ypos, uint8_t ASCI, uint16_t charColor, ui
     }
 }
 
+
+/******************************************************************************
+* Function Name  : PutCharReverse
+* Description    : 将Lcd屏上任意位置显示一个字符
+* Input          : - Xpos: 水平坐标 
+*                  - Ypos: 垂直坐标  
+*				   - ASCI: 显示的字符
+*				   - charColor: 字符颜色   
+*				   - bkColor: 背景颜色 
+* Output         : None
+* Return         : None
+* Attention		 : None
+*******************************************************************************/
+void PutCharReverse( uint16_t Xpos, uint16_t Ypos, uint8_t ASCI, uint16_t charColor, uint16_t bkColor )
+{
+	uint16_t i, j;
+	uint8_t buffer[16], tmp_char;
+	GetASCIICode(buffer,ASCI);  
+	for( i=0; i<16; i++ )
+	{
+			tmp_char = buffer[15-i];
+			for( j=0; j<8; j++ )
+			{
+					if( (tmp_char >> j) & 0x01 == 0x01 )
+					{
+							LCD_SetPoint( Xpos + j, Ypos + i, charColor );  
+					}
+					else
+					{
+							LCD_SetPoint( Xpos + j, Ypos + i, bkColor ); 
+					}
+			}
+	}
+}
+
 /******************************************************************************
 * Function Name  : GUI_Text
 * Description    : 在指定座标显示字符串
@@ -1395,6 +1430,45 @@ void GUI_Text(uint16_t Xpos, uint16_t Ypos, uint8_t *str,uint16_t Color, uint16_
         {
             Xpos = 0;
             Ypos += 16;
+        }   
+        else
+        {
+            Xpos = 0;
+            Ypos = 0;
+        }    
+    }
+    while ( *str != 0 );
+}
+
+
+/******************************************************************************
+* Function Name  : GUI_Text
+* Description    : 在指定座标显示字符串
+* Input          : - Xpos: 行座标
+*                  - Ypos: 列座标 
+*				   - str: 字符串
+*				   - charColor: 字符颜色   
+*				   - bkColor: 背景颜色 
+* Output         : None
+* Return         : None
+* Attention		 : None
+*******************************************************************************/
+void GUI_TextReverse(uint16_t Xpos, uint16_t Ypos, uint8_t *str,uint16_t Color, uint16_t bkColor)
+{
+    uint8_t TempChar;
+	  Xpos-=8;
+    do
+    {
+        TempChar = *str++;  
+        PutCharReverse( Xpos, Ypos, TempChar, Color, bkColor );    
+        if( Xpos > 8 )
+        {
+            Xpos -= 8;
+        } 
+        else if ( Ypos > 16 )
+        {
+            Xpos = MAX_X;
+            Ypos -= 16;
         }   
         else
         {
