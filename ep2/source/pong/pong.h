@@ -10,7 +10,7 @@
 #define BALL_SIZE 5
 #define WALL_SIZE 5
 #define PI 3.141592654
-#define TOP_PADDLE_SPEED 3
+#define TOP_PADDLE_SPEED 2
 
 
 #define IS_GOOD_BORDER_LEFT ( GOING_LEFT && ball.x<=5) 
@@ -54,6 +54,7 @@ typedef struct {
 	float y;
 	uint16_t int_x;
 	uint16_t int_y;
+	float x_hit_top;
 	double dir_angle; 
 	float sin_dir_angle;
 	float cos_dir_angle;

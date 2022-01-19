@@ -36,6 +36,7 @@ void pong_init(){
 	ball.dir_angle = PI + PI/4;
 	ball.sin_dir_angle = sin(PI + PI/4);
 	ball.cos_dir_angle = cos(PI + PI/4);
+	ball.x_hit_top = MAX_X/2 ;
 	
 	LCD_Clear(Black);
 	
@@ -73,7 +74,7 @@ void manage_loosing(){
 		player_bottom.points++;
 	}
 	else{
-4		player_top.points++;
+		player_top.points++;
 	}
 	
 	sprintf(str, "%d", player_bottom.points);
@@ -116,13 +117,24 @@ void manage_loosing(){
 	
 }
 
-void emit_tone(int intensity){
-	disable_timer(2);
-	reset_timer(2);
-	init_timer(2,intensity);
-	ticks=0;
-	num_sin=0;
-	enable_timer(2);
+//void emit_tone(int intensity){
+//	disable_timer(2);
+//	reset_timer(2);
+//	init_timer(2,intensity);
+//	ticks=0;
+//	num_sin=0;
+//	enable_timer(2);
+//}
+
+void update_x_hit_top(){
+	if (GOING_UP){
+		if (GOING_LEFT || GOING_RIGHT){
+			ball.x_hit_top = ball.x + (ball.sin_dir_angle/ball.cos_dir_angle)*(ball.y-PADDLE_MARGIN-PADDLE_HEIGHT);
+		}
+		else{
+			ball.x_hit_top = ball.x;
+		}
+	}
 }
 
 void normalize_dir_angle(){
@@ -137,6 +149,7 @@ void manage_bounce(){
 		normalize_dir_angle();
 		ball.sin_dir_angle = sin(ball.dir_angle);
 		ball.cos_dir_angle = cos(ball.dir_angle);
+		update_x_hit_top();
 	}
 	else if ( IS_HITTING_PADDLE ){
 		int rel_x;
@@ -160,13 +173,16 @@ void manage_bounce(){
 		}
 		if ( IS_HITTING_PADDLE_BOTTOM ){
 			ball.dir_angle = (((rel_x) * PI) / (PADDLE_WIDTH)) + 3*PI/2;
+			normalize_dir_angle();
+			ball.sin_dir_angle = sin(ball.dir_angle);
+			ball.cos_dir_angle = cos(ball.dir_angle);
+			update_x_hit_top();
 		}
 		else{
 			ball.dir_angle = (((rel_x) * PI) / (PADDLE_WIDTH)) + PI/2;
+			normalize_dir_angle();
+			ball.sin_dir_angle = sin(ball.dir_angle);
+			ball.cos_dir_angle = cos(ball.dir_angle);
 		}
-		// map hitting pixel to relative angle
-		normalize_dir_angle();
-		ball.sin_dir_angle = sin(ball.dir_angle);
-		ball.cos_dir_angle = cos(ball.dir_angle);
 	}
 }

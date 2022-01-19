@@ -35,23 +35,29 @@ extern uint8_t num_sin;
 extern uint8_t ticks;
 
 uint16_t old_pixels[BALL_SIZE][BALL_SIZE] = {{Black}};
-uint16_t SinTable[45] = {
-    410, 467, 523, 576, 627, 673, 714, 749, 778,
-    799, 813, 819, 817, 807, 789, 764, 732, 694, 
-    650, 602, 550, 495, 438, 381, 324, 270, 217,
-    169, 125, 87 , 55 , 30 , 12 , 2  , 0  , 6  ,   
-    20 , 41 , 70 , 105, 146, 193, 243, 297, 353
-};
-uint8_t top_paddle_dir = 1; // 1 -> right; 0 -> left
+//uint16_t SinTable[45] = {
+//    410, 467, 523, 576, 627, 673, 714, 749, 778,
+//    799, 813, 819, 817, 807, 789, 764, 732, 694, 
+//    650, 602, 550, 495, 438, 381, 324, 270, 217,
+//    169, 125, 87 , 55 , 30 , 12 , 2  , 0  , 6  ,   
+//    20 , 41 , 70 , 105, 146, 193, 243, 297, 353
+//};
+uint8_t top_paddle_dir = 1; // 1 -> right; 0 -> left; 2 -> stopped
 
 void TIMER0_IRQHandler (void)
 {
 	uint8_t i, j;
 	uint16_t old_ball_x = ball.int_x, old_ball_y = ball.int_y, old_top_paddle_x = player_top.paddle_x;
 	
-	// move top paddle
+	if(ball.x_hit_top < player_top.paddle_x+PADDLE_WIDTH/2-10 && ball.x_hit_top > - 45)
+		top_paddle_dir = 0; // go left
+	else if(ball.x_hit_top > player_top.paddle_x+PADDLE_WIDTH/2+10 && ball.x_hit_top < MAX_X + 45)
+		top_paddle_dir = 1; // go right
+	else
+		top_paddle_dir = 2; // stop
 	
-	if (top_paddle_dir){
+	// move top paddle	
+	if (top_paddle_dir==1){
 		// calculate new x
 		player_top.paddle_x+=TOP_PADDLE_SPEED;
 		if ( TOP_PADDLE_BOUNCING_RIGHT ) {
@@ -63,7 +69,7 @@ void TIMER0_IRQHandler (void)
 		// draw new piece of paddle on the right
 		LCD_DrawRect( player_top.paddle_x+PADDLE_WIDTH-TOP_PADDLE_SPEED, player_top.paddle_y, TOP_PADDLE_SPEED, PADDLE_HEIGHT, Green);
 	}
-	else{
+	else if (top_paddle_dir==0){
 		// calculate new x
 		player_top.paddle_x-=TOP_PADDLE_SPEED;
 		if ( TOP_PADDLE_BOUNCING_LEFT ) {
@@ -147,16 +153,16 @@ void TIMER2_IRQHandler (void)
 {
 	
 	/* DAC management */	
-	LPC_DAC->DACR = SinTable[ticks]<<6;
-	ticks++;
-	if(ticks==45) {
-		num_sin++;
-		ticks=0;
-		if (num_sin > N_SIN ){
-			num_sin = 0;
-			disable_timer(2);
-		}
-	}	
+//	LPC_DAC->DACR = SinTable[ticks]<<6;
+//	ticks++;
+//	if(ticks==45) {
+//		num_sin++;
+//		ticks=0;
+//		if (num_sin > N_SIN ){
+//			num_sin = 0;
+//			disable_timer(2);
+//		}
+//	}	
 	
   LPC_TIM2->IR = 1;			/* clear interrupt flag */
   return;
