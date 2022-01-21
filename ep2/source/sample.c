@@ -9,7 +9,6 @@
  * Copyright (c) 2017 Politecnico di Torino. All rights reserved.
  *----------------------------------------------------------------------------*/
                   
-#include <stdio.h>
 #include "LPC17xx.H"                    /* LPC17xx definitions                */
 #include "button_EXINT/button.h"
 #include "adc/adc.h"
@@ -31,7 +30,7 @@ int main (void) {
   	
 	SystemInit();  												/* System Initialization (i.e., PLL)  */
 	
-  LCD_Initialization();           
+  LCD_Initialization();           			
   BUTTON_init();												/* BUTTON Initialization */ 
 	ADC_init();
 	

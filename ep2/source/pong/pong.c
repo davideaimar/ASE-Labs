@@ -16,7 +16,7 @@ volatile uint8_t num_sin = 0;
 volatile uint8_t ticks = 0;
 
 void pong_init(){
-	
+	char str[5];
 	//player_bottom initialization
 	player_bottom.paddle_x = (MAX_X-PADDLE_WIDTH)/2;
 	player_bottom.paddle_y = MAX_Y-PADDLE_MARGIN-PADDLE_HEIGHT;
@@ -51,6 +51,11 @@ void pong_init(){
 	LCD_DrawRect( player_top.paddle_x, player_top.paddle_y, PADDLE_WIDTH, PADDLE_HEIGHT, Green);
 	// paddle bottom
 	LCD_DrawRect( player_bottom.paddle_x, player_bottom.paddle_y, PADDLE_WIDTH, PADDLE_HEIGHT, Green);
+	
+	sprintf(str, "%d", player_bottom.points);
+	GUI_Text(WALL_SIZE, 155, (uint8_t *) str, White, Black);
+	sprintf(str, "%d", player_top.points);
+	GUI_TextReverse(MAX_X-WALL_SIZE, 155, (uint8_t *) str, White, Black);
 	
 	GUI_Text(40, 300, (uint8_t *) " press KEY1 to play ", White, Black);
 	

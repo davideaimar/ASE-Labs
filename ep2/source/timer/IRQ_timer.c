@@ -13,6 +13,7 @@
 #include "../adc/adc.h"
 #include "../pong/pong.h"
 #include <math.h>
+#include <stdio.h>
 
 /******************************************************************************
 ** Function name:		Timer0_IRQHandler
@@ -46,8 +47,11 @@ uint8_t top_paddle_dir = 1; // 1 -> right; 0 -> left; 2 -> stopped
 
 void TIMER0_IRQHandler (void)
 {
+	char str[5]; 
 	uint8_t i, j;
 	uint16_t old_ball_x = ball.int_x, old_ball_y = ball.int_y, old_top_paddle_x = player_top.paddle_x;
+	
+	// ---- BEGIN: move top paddle	
 	
 	if(ball.x_hit_top < player_top.paddle_x+PADDLE_WIDTH/2-10 && ball.x_hit_top > - 45)
 		top_paddle_dir = 0; // go left
@@ -56,7 +60,6 @@ void TIMER0_IRQHandler (void)
 	else
 		top_paddle_dir = 2; // stop
 	
-	// move top paddle	
 	if (top_paddle_dir==1){
 		// calculate new x
 		player_top.paddle_x+=TOP_PADDLE_SPEED;
@@ -82,7 +85,10 @@ void TIMER0_IRQHandler (void)
 		LCD_DrawRect( player_top.paddle_x, player_top.paddle_y, TOP_PADDLE_SPEED, PADDLE_HEIGHT, Green);
 	}
 	
-	/* GUI refresh */
+	// ---- END: move top paddle	
+	
+	
+	// ---- BEGIN: GUI refresh	
 	if ( IS_LOOSING_TOP || IS_LOOSING_BOTTOM ) {
 		manage_loosing();
 	}
@@ -102,7 +108,33 @@ void TIMER0_IRQHandler (void)
 		ball.int_y = floor(ball.y);
 		
 		
+		// i saw that in the real board the LCD_GetPoint(...) works well, while in emulation it's not precise
+		// so i decided to have different behaviours: 
+		//  - in emulation: just clear the ball with black pixels and re-write the score if necessary
+		//  - real board: clear the ball by putting back the old pixels saved into a matrix
+		// NOTE: the real board code is not tested.
+		
+		#ifdef SIMULATOR
 		// restore old pixels (clear ball)
+		for ( i=0; i<BALL_SIZE; i++ ){
+			for ( j=0; j<BALL_SIZE; j++ ){
+				if ( ! ( (old_ball_y+i >= MAX_Y-PADDLE_MARGIN-PADDLE_HEIGHT && old_ball_y+i < MAX_Y-PADDLE_MARGIN && old_ball_x+j >= player_bottom.paddle_x && old_ball_x+j < player_bottom.paddle_x+PADDLE_WIDTH ) || (old_ball_y+i > PADDLE_MARGIN && old_ball_y+i < PADDLE_MARGIN+PADDLE_HEIGHT && old_ball_x+j > player_top.paddle_x && old_ball_x+j < player_top.paddle_x+PADDLE_WIDTH )))
+					LCD_SetPoint(old_ball_x+j, old_ball_y+i, Black);
+				LCD_SetPoint(ball.int_x+j, ball.int_y+i, Green);
+			}
+		}
+		if (old_ball_x <= WALL_SIZE+8 && old_ball_y >= 155 && old_ball_y <= 155+16){
+			// ball passed over left score
+			sprintf(str, "%d", player_bottom.points);
+			GUI_Text(WALL_SIZE, 155, (uint8_t *) str, White, Black);
+		}
+		else if(old_ball_x >= MAX_X-WALL_SIZE-BALL_SIZE-8 && old_ball_y >= 155 && old_ball_y <= 155+16){
+			// ball passed over right score
+			sprintf(str, "%d", player_top.points);
+			GUI_TextReverse(MAX_X-WALL_SIZE, 155, (uint8_t *) str, White, Black);
+		}
+		#else
+		// clear old ball
 		for ( i=0; i<BALL_SIZE; i++ ){
 			for ( j=0; j<BALL_SIZE; j++ ){
 				LCD_SetPoint(old_ball_x+j, old_ball_y+i, old_pixels[i][j]);
@@ -115,7 +147,9 @@ void TIMER0_IRQHandler (void)
 				LCD_SetPoint(ball.int_x+j, ball.int_y+i, Green);
 			}
 		}
+		#endif
 	}
+	// ---- END: GUI refresh	
 	
   LPC_TIM0->IR = 1;			/* clear interrupt flag */
   return;

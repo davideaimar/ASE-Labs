@@ -10,7 +10,6 @@
 #define BALL_SIZE 5
 #define WALL_SIZE 5
 #define PI 3.141592654
-#define TOP_PADDLE_SPEED 2
 
 
 #define IS_GOOD_BORDER_LEFT ( GOING_LEFT && ball.x<=5) 
@@ -21,8 +20,8 @@
 #define GOING_RIGHT ( ball.dir_angle > 0 && ball.dir_angle < PI ) 
 #define GOING_LEFT ( ball.dir_angle < 2*PI && ball.dir_angle > PI )
 
-#define IS_LOOSING_TOP ( ball.y <= 0 )
-#define IS_LOOSING_BOTTOM ( ball.y >= MAX_Y-BALL_SIZE )
+#define IS_LOOSING_TOP ( ball.y <= PADDLE_MARGIN )
+#define IS_LOOSING_BOTTOM ( ball.y >= MAX_Y-PADDLE_MARGIN )
 #define IS_BOUNCING ( (GOING_LEFT && IS_GOOD_BORDER_LEFT) || (GOING_RIGHT && IS_GOOD_BORDER_RIGHT) )
 #define TOP_PADDLE_BOUNCING_RIGHT ( top_paddle_dir && player_top.paddle_x >= MAX_X-WALL_SIZE-PADDLE_WIDTH )
 #define TOP_PADDLE_BOUNCING_LEFT ( !top_paddle_dir && player_top.paddle_x <= WALL_SIZE )
@@ -36,11 +35,13 @@
 #define N_SIN 1
 #define LOW_TONE 7000 // (use scaling on timer2)
 #define HIGH_TONE 5000 // (use scaling on timer2)
+#define TOP_PADDLE_SPEED 2
 #else
 #define SPEED 1
 #define N_SIN 15
 #define LOW_TONE 2000
 #define HIGH_TONE 400
+#define TOP_PADDLE_SPEED 1
 #endif
 
 typedef struct {

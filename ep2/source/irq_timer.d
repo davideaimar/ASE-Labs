@@ -13,3 +13,4 @@
 .\irq_timer.o: timer\../pong/pong.h
 .\irq_timer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
 .\irq_timer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\irq_timer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

@@ -4,8 +4,6 @@
 ".\sample.o"
 ".\core_cm3.o"
 ".\system_lpc17xx.o"
-".\funct_led.o"
-".\lib_led.o"
 ".\irq_button.o"
 ".\lib_button.o"
 ".\irq_timer.o"
