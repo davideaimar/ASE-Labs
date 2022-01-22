@@ -47,7 +47,9 @@ uint8_t top_paddle_dir = 1; // 1 -> right; 0 -> left; 2 -> stopped
 
 void TIMER0_IRQHandler (void)
 {
+	#ifdef SIMULATOR
 	char str[5]; 
+	#endif
 	uint8_t i, j;
 	uint16_t old_ball_x = ball.int_x, old_ball_y = ball.int_y, old_top_paddle_x = player_top.paddle_x;
 	
